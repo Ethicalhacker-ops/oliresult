@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://server:5000
+    depends_on:
+      - server
+    networks:
+      - oli-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/oli-mock-results
+      - JWT_SECRET=your_jwt_secret
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+    networks:
+      - oli-network
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - oli-network
+
+volumes:
+  mongo-data:
+
+networks:
+  oli-network:
+    driver: bridge
