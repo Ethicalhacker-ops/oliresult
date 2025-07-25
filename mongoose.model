@@ -1,0 +1,38 @@
+// Admin Model
+const AdminSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['super', 'regular'], default: 'regular' },
+  lastLogin: Date
+});
+const Admin = mongoose.model('Admin', AdminSchema);
+
+// Student Model
+const StudentSchema = new mongoose.Schema({
+  rollNumber: { type: String, required: true, unique: true },
+  fullName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  phone: String,
+  registeredAt: { type: Date, default: Date.now }
+});
+const Student = mongoose.model('Student', StudentSchema);
+
+// Test Result Model
+const ResultSchema = new mongoose.Schema({
+  student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
+  testDate: { type: Date, required: true },
+  listeningScore: { type: Number, min: 0, max: 9 },
+  readingScore: { type: Number, min: 0, max: 9 },
+  writingScore: { type: Number, min: 0, max: 9 },
+  speakingScore: { type: Number, min: 0, max: 9 },
+  overallBand: { type: Number, min: 0, max: 9 },
+  comments: String,
+  published: { type: Boolean, default: false },
+  publishedAt: Date
+});
+const Result = mongoose.model('Result', ResultSchema);
+
+// Export all models
+module.exports = { Admin, Student, Result };
